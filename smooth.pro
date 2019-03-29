@@ -13,4 +13,6 @@ HEADERS += \
     ProcessingArray.h
 
 DISTFILES += \
-    Test.txt
+    Test.txt \
+    README.md \
+    LICENSE
