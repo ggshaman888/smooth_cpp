@@ -1,2 +1,2 @@
-# smoth_cpp
+# smooth_cpp
 Алгоритм скользящего среднего (Simple Moving Average)
