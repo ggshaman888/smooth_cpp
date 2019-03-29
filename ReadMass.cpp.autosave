@@ -1,0 +1,35 @@
+#include "ReadMass.h"
+
+
+ReadMass::ReadMass(ReadArg *args):arguments(args)
+{
+    readFile();
+}
+
+void ReadMass::readFile()
+{
+    setlocale(LC_ALL, "rus");
+    char buff[50];
+    std::ifstream fin(arguments->pathFile);
+
+    if (!fin.is_open())
+        std::cout << arguments->pathFile << "File don't open!\n";
+    else
+    {
+        while (!fin.eof()){
+            fin.getline(buff,500);
+            if(numberTrue(buff))
+                mass.push_back(nowNumber);
+        }
+    fin.close();
+    }
+}
+
+bool ReadMass::numberTrue(std::string str)
+{
+    nowNumber = std::atof(str.c_str());
+
+    if (nowNumber != 0)
+        return true;
+    return false;
+}
