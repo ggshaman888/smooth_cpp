@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <queue>
 
 class ProcessingArray
 {
@@ -20,11 +21,20 @@ private:
     bool vectorSmoothSMA();
     bool readFile();
     bool writeFile();
-    int windowSize(int, int, int);
     double arithmeticMean (int, int);
     bool numberTrue(std::string);
-    double nowNumber;
     ReadArg *arguments;
+
+    double nowNumber;
+    int windowSize(int, int, int);
+    std::vector<double> window_mass;
+    void addQueueWindow(double, int);
+
+    int iterator;
+    void setWindow();
+    double arithmeticMeanFast ();
+    bool vectorSmoothSMAFast();
+
 };
 
 #endif // READMASS_H

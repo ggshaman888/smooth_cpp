@@ -7,7 +7,7 @@ ProcessingArray::ProcessingArray(ReadArg *args):arguments(args)
 {
     readFile();
 
-    if (vectorSmoothSMA())
+    if (vectorSmoothSMAFast())
         writeFile();
 }
 
@@ -23,6 +23,30 @@ bool ProcessingArray::vectorSmoothSMA() // Simple Movig Average с динами�
 
     for (int index=0; index < mass.size();index++){
         massBuff.push_back(arithmeticMean(windowSize(arguments->smoothM, index, mass.size()),index));
+    }
+
+    mass.clear();
+    massBuff.swap(mass);
+
+    return 1;
+}
+
+bool ProcessingArray::vectorSmoothSMAFast()
+{
+
+    if (arguments->smoothM >= mass.size()){
+        std::cout << "2 argument very big! Count elements: " << mass.size() << std::endl;
+        return 0;
+    }
+
+    std::vector<double> massBuff;
+
+    for (iterator=0; iterator < mass.size();iterator++){
+        if (iterator==799){
+
+            int i=1;
+        }
+        massBuff.push_back(arithmeticMeanFast());
     }
 
     mass.clear();
@@ -60,6 +84,44 @@ double ProcessingArray::arithmeticMean(int window, int n)
     }
     return summ/buff_win;
 }
+
+double ProcessingArray::arithmeticMeanFast()
+{
+    setWindow();
+    double summ = 0;
+
+    for (int i=0;i<window_mass.size();i++) {
+        summ += window_mass.at(i);
+    }
+
+    return summ/window_mass.size();
+}
+void ProcessingArray::addQueueWindow(double element, int window)
+{
+    while(window_mass.size()>=window)
+        window_mass.erase(window_mass.begin());
+
+    window_mass.push_back(element);
+}
+
+void ProcessingArray::setWindow()
+{
+    int windowSize;
+    int flank = (arguments->smoothM-1)/2;
+    int lengthLeft = iterator;
+    int lengthRight = mass.size()-iterator-1;
+    int length = lengthLeft < lengthRight ? lengthLeft : lengthRight;
+
+    if(length <= flank)
+        windowSize = length*2+1;
+    else
+        windowSize = flank*2+1;
+
+    window_mass.push_back(mass.at(iterator));
+    while(window_mass.size()>windowSize)
+        window_mass.erase(window_mass.begin());
+}
+
 bool ProcessingArray::vectorSmoothMerg()
 {
     if (arguments->smoothM >= mass.size()){
@@ -136,3 +198,4 @@ bool ProcessingArray::numberTrue(std::string str)
         return true;
     return false;
 }
+
