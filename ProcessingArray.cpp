@@ -5,6 +5,7 @@
 
 ProcessingArray::ProcessingArray(ReadArg *args):arguments(args)
 {
+    summWindow=0;
     readFile();
 
     if (vectorSmoothSMAFast())
@@ -42,10 +43,6 @@ bool ProcessingArray::vectorSmoothSMAFast()
     std::vector<double> massBuff;
 
     for (iterator=0; iterator < mass.size();iterator++){
-        if (iterator==799){
-
-            int i=1;
-        }
         massBuff.push_back(arithmeticMeanFast());
     }
 
@@ -88,13 +85,7 @@ double ProcessingArray::arithmeticMean(int window, int n)
 double ProcessingArray::arithmeticMeanFast()
 {
     setWindow();
-    double summ = 0;
-
-    for (int i=0;i<window_mass.size();i++) {
-        summ += window_mass.at(i);
-    }
-
-    return summ/window_mass.size();
+    return summWindow/window_mass.size();
 }
 void ProcessingArray::addQueueWindow(double element, int window)
 {
@@ -118,8 +109,12 @@ void ProcessingArray::setWindow()
         windowSize = flank*2+1;
 
     window_mass.push_back(mass.at(iterator));
-    while(window_mass.size()>windowSize)
+    summWindow += window_mass.at(window_mass.size()-1);
+
+    while(window_mass.size()>windowSize){
+        summWindow -= window_mass.at(0);
         window_mass.erase(window_mass.begin());
+    }
 }
 
 bool ProcessingArray::vectorSmoothMerg()

@@ -31,6 +31,7 @@ private:
     void addQueueWindow(double, int);
 
     int iterator;
+    double summWindow;
     void setWindow();
     double arithmeticMeanFast ();
     bool vectorSmoothSMAFast();
