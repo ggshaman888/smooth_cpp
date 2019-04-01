@@ -17,25 +17,24 @@ public:
 private:
     std::vector<double> mass;
 
-    bool vectorSmoothMerg();
-    bool vectorSmoothSMA();
-    bool readFile();
-    bool writeFile();
-    double arithmeticMean (int, int);
-    bool numberTrue(std::string);
-    ReadArg *arguments;
-
     double nowNumber;
-    int windowSize(int, int, int);
     std::vector<double> window_mass;
-    void addQueueWindow(double, int);
-
+    ReadArg *arguments;
     int iterator;
     double summWindow;
     void setWindow();
     double arithmeticMeanFast ();
     bool vectorSmoothSMAFast();
+    bool readFile();
+    bool numberTrue(std::string);
+    bool writeFile();
 
+//    bool vectorSmoothMerg();
+//    bool vectorSmoothSMA();
+//    double arithmeticMean (int, int);
+
+//    int windowSize(int, int, int);
+//    void addQueueWindow(double, int);
 };
 
 #endif // READMASS_H

@@ -12,26 +12,6 @@ ProcessingArray::ProcessingArray(ReadArg *args):arguments(args)
         writeFile();
 }
 
-bool ProcessingArray::vectorSmoothSMA() // Simple Movig Average с динамически изменяемым окном
-{
-
-    if (arguments->smoothM >= mass.size()){
-        std::cout << "2 argument very big! Count elements: " << mass.size() << std::endl;
-        return 0;
-    }
-
-    std::vector<double> massBuff;
-
-    for (int index=0; index < mass.size();index++){
-        massBuff.push_back(arithmeticMean(windowSize(arguments->smoothM, index, mass.size()),index));
-    }
-
-    mass.clear();
-    massBuff.swap(mass);
-
-    return 1;
-}
-
 bool ProcessingArray::vectorSmoothSMAFast()
 {
 
@@ -52,47 +32,10 @@ bool ProcessingArray::vectorSmoothSMAFast()
     return 1;
 }
 
-int ProcessingArray::windowSize(int M, int n, int max)
-{
-    int flank_max = (M-1)/2;
-    int flank = flank_max;
-    n++;
-    if (flank_max >= n)
-        flank = n - 1;
-    if ((n-max)*-1 <= flank_max)
-        flank = (n - max)*-1;
-
-    if (flank < flank_max)
-        return flank*2+1; // window size
-    else
-        return flank_max*2+1;
-
-}
-
-double ProcessingArray::arithmeticMean(int window, int n)
-{
-    int flank, i=0, j=0;
-    int buff_win = window;
-    double summ = mass.at(n);
-    flank = (window-1)/2;
-    while (--window) {
-        summ +=mass.at(n+flank);
-        flank--;
-    }
-    return summ/buff_win;
-}
-
 double ProcessingArray::arithmeticMeanFast()
 {
     setWindow();
     return summWindow/window_mass.size();
-}
-void ProcessingArray::addQueueWindow(double element, int window)
-{
-    while(window_mass.size()>=window)
-        window_mass.erase(window_mass.begin());
-
-    window_mass.push_back(element);
 }
 
 void ProcessingArray::setWindow()
@@ -116,31 +59,6 @@ void ProcessingArray::setWindow()
         window_mass.erase(window_mass.begin());
     }
 }
-
-bool ProcessingArray::vectorSmoothMerg()
-{
-    if (arguments->smoothM >= mass.size()){
-        std::cout << "2 argument very big! Count elements: " << mass.size() << std::endl;
-        return 0;
-    }
-
-    std::vector<double> massBuff;
-    for (int index=0; index < mass.size();){
-        int summ = 0;
-        double count = 0;
-        for (int i=0; i < arguments->smoothM; i++) {
-            summ += mass[index++];
-            count++;
-        }
-        massBuff.push_back(summ / count);
-    }
-    mass.clear();
-    massBuff.swap(mass);
-
-    return 1;
-}
-
-
 
 bool ProcessingArray::readFile()
 {
@@ -183,8 +101,6 @@ bool ProcessingArray::writeFile()
     return 1;
 }
 
-
-
 bool ProcessingArray::numberTrue(std::string str)
 {
     nowNumber = std::atof(str.c_str());
@@ -194,3 +110,83 @@ bool ProcessingArray::numberTrue(std::string str)
     return false;
 }
 
+//void ProcessingArray::addQueueWindow(double element, int window)
+//{
+//    while(window_mass.size()>=window)
+//        window_mass.erase(window_mass.begin());
+
+//    window_mass.push_back(element);
+//}
+
+//bool ProcessingArray::vectorSmoothMerg()
+//{
+//    if (arguments->smoothM >= mass.size()){
+//        std::cout << "2 argument very big! Count elements: " << mass.size() << std::endl;
+//        return 0;
+//    }
+
+//    std::vector<double> massBuff;
+//    for (int index=0; index < mass.size();){
+//        int summ = 0;
+//        double count = 0;
+//        for (int i=0; i < arguments->smoothM; i++) {
+//            summ += mass[index++];
+//            count++;
+//        }
+//        massBuff.push_back(summ / count);
+//    }
+//    mass.clear();
+//    massBuff.swap(mass);
+
+//    return 1;
+//}
+
+//int ProcessingArray::windowSize(int M, int n, int max)
+//{
+//    int flank_max = (M-1)/2;
+//    int flank = flank_max;
+//    n++;
+//    if (flank_max >= n)
+//        flank = n - 1;
+//    if ((n-max)*-1 <= flank_max)
+//        flank = (n - max)*-1;
+
+//    if (flank < flank_max)
+//        return flank*2+1; // window size
+//    else
+//        return flank_max*2+1;
+
+//}
+
+//double ProcessingArray::arithmeticMean(int window, int n)
+//{
+//    int flank, i=0, j=0;
+//    int buff_win = window;
+//    double summ = mass.at(n);
+//    flank = (window-1)/2;
+//    while (--window) {
+//        summ +=mass.at(n+flank);
+//        flank--;
+//    }
+//    return summ/buff_win;
+//}
+
+//bool ProcessingArray::vectorSmoothSMA() // Simple Movig Average с динамически изменяемым окном
+//{
+
+//    if (arguments->smoothM >= mass.size()){
+//        std::cout << "2 argument very big! Count elements: " << mass.size() << std::endl;
+//        return 0;
+//    }
+
+//    std::vector<double> massBuff;
+
+//    for (int index=0; index < mass.size();index++){
+//        massBuff.push_back(arithmeticMean(windowSize(arguments->smoothM, index, mass.size()),index));
+//    }
+
+//    mass.clear();
+//    massBuff.swap(mass);
+
+//    return 1;
+//}
